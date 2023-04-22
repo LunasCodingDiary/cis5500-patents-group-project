@@ -6,7 +6,7 @@ import { createTheme } from "@mui/material/styles";
 import NavBar from './components/NavBar';
 import HomePage from './pages/HomePage';
 import PatentsPage from './pages/PatentsPage';
-import PatentInfoPage from './pages/PatentInfoPage';
+import PatentInfoPage from './pages/PatentVizPage';
 
 // createTheme enables you to customize the look and feel of your app past the default
 // in this case, we only change the color scheme
@@ -30,7 +30,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/patents" element={<PatentsPage />} />
-          <Route path="/patents/:patent_id" element={<PatentInfoPage />} />
+          <Route path="/patents/:patent_id" element={<PatentVizPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

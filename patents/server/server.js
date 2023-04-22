@@ -11,20 +11,15 @@ const app = express();
 // whitelist localhost 3000
 app.use(cors({ credentials: true, origin: ['http://localhost:3000'] }));
 
-// Route 1 - register as GET 
-app.get('/patents', routes.all_patents)
+app.get('/author/:type', routes.author);
+app.get('/random', routes.random);
 
-// Route 2 - register as GET 
-app.get('/search/patents', routes.search_patents)
+app.get('/patents', routes.all_patents);
+app.get('/search_patents', routes.search_patents);
+app.get('/patent/:id', routes.patent)
 
-// Route 3 - register as GET 
-app.get('/patent_viz', routes.patent_viz)
-
-// Route 5 - register as GET 
-app.get('/patent_map', routes.map)
-
-// Route 6 - register as GET 
-app.get('/patent_map/filter', routes.filter_map)
+app.get('/patent_map', routes.patent_map)
+app.get('/patent_map_filter', routes.filter_map)
 
 
 app.listen(config.server_port, () => {
