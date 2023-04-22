@@ -114,7 +114,7 @@ export default function SearchPatentPage() {
             style={{ background: 'white', borderRadius: '16px', border: '2px solid #000' }}
           >
             <h4>
-              <NavLink to={`/patent_viz?id=${patent.patent_id}`}>{patent.patent_title}</NavLink>
+              <NavLink to={`/patent/${patent.patent_id}`}>{patent.patent_title}</NavLink>
             </h4>
             <p>Publication date: {patent.pub_date}</p>
           </Box>

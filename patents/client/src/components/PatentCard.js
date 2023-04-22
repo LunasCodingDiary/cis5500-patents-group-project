@@ -1,23 +1,32 @@
 import { useEffect, useState } from 'react';
 import { Box, Button, Modal } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 
 const config = require('../config.json');
 
 export default function PatentCard({ patentId, handleClose }) {
-  const [patent, setPatent] = useState({});
+  const [patentData, setPatentData] = useState({});
 
   useEffect(() => {
-    if (patentId) {
-      fetch(`http://${config.server_host}:${config.server_port}/patents/${patentId}`)
-        .then(res => res.json())
-        .then(resJson => setPatent(resJson));
-    }
+    fetch(`http://${config.server_host}:${config.server_port}/patent/${patentId}`)
+      .then(res => res.json())
+      .then(resJson => setPatentData(resJson))
   }, [patentId]);
+
+  const chartData = [
+    { name: 'Machine Learning', value: patentData.ai_score_ml },
+    { name: 'Evolutionary', value: patentData.ai_score_evo },
+    { name: 'NLP', value: patentData.ai_score_nlp },
+    { name: 'Speech', value: patentData.ai_score_speach },
+    { name: 'Vision', value: patentData.ai_score_vision },
+    { name: 'Knowledge Representation', value: patentData.ai_score_kr },
+    { name: 'Planning', value: patentData.ai_score_planning },
+    { name: 'Hardware', value: patentData.ai_score_hardware }
+  ];
 
   return (
     <Modal
-      open={!!patentId}
+      open={true}
       onClose={handleClose}
       style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
     >
@@ -25,13 +34,19 @@ export default function PatentCard({ patentId, handleClose }) {
         p={3}
         style={{ background: 'white', borderRadius: '16px', border: '2px solid #000', width: 600 }}
       >
-        <h1>{patent.title}</h1>
-        <h4>Publication Number: {patent.publication_number}</h4>
-        <h4>Publication Date: {patent.publication_date}</h4>
-        <h4>Inventors: {patent.inventors}</h4>
-        <h4>Assignee: {patent.assignee}</h4>
-        <h4>Abstract:</h4>
-        <p>{patent.abstract}</p>
+        <h1>{patentData.patent_title}</h1>
+        <h2>Patent id: {patentData.patent_id}</h2>
+
+        <div style={{ margin: 20 }}>
+          <ResponsiveContainer height={350}>
+            <RadarChart data={chartData}>
+              <PolarGrid />
+              <PolarAngleAxis dataKey="name" />
+              <PolarRadiusAxis />
+              <Radar name="AI Score" dataKey="value" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+            </RadarChart>
+          </ResponsiveContainer>
+        </div>
         <Button onClick={handleClose} style={{ left: '50%', transform: 'translateX(-50%)' }}>
           Close
         </Button>

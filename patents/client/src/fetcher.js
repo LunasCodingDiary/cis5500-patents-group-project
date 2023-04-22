@@ -15,7 +15,7 @@ const getPatentSearch = async (page, pagesize) => {
 }
 
 const getPatentViz = async (id) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/patent?id=${id}`, {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/patent/${patentId}`, {
         method: 'GET',
     })
     return res.json()

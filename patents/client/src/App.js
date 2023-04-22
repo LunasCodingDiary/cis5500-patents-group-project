@@ -6,7 +6,7 @@ import { createTheme } from "@mui/material/styles";
 import NavBar from './components/NavBar';
 import HomePage from './pages/HomePage';
 import PatentsPage from './pages/PatentsPage';
-import PatentPage from './pages/PatentPage';
+import PatentVizPage from './pages/PatentVizPage';
 import SearchPatentPage from './pages/SearchPatentPage';
 
 export const theme = createTheme({
@@ -25,7 +25,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/patents" element={<PatentsPage />} />
-          <Route path="/patent/:id" element={<PatentPage />} />
+          <Route path="/patent/:id" element={<PatentVizPage />} />
           <Route path="/search_patents" element={<SearchPatentPage />} />
         </Routes>
       </BrowserRouter>
