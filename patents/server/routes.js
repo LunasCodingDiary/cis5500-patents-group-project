@@ -2,7 +2,6 @@ const config = require('./config.json')
 const mysql = require('mysql');
 const e = require('express');
 
-// TODO: fill in your connection details here
 const connection = mysql.createConnection({
     host: config.rds_host,
     user: config.rds_user,
@@ -10,30 +9,49 @@ const connection = mysql.createConnection({
     port: config.rds_port,
     database: config.rds_db
 });
-connection.connect();
+connection.connect((err) => err && console.log(err));
 
-
-// ********************************************
-//            SIMPLE ROUTE EXAMPLE
-// ********************************************
-
-// Route 1 (handler)
-async function hello(req, res) {
-    // a GET request to /hello?name=Steve
-    if (req.query.name) {
-        res.send(`Hello, ${req.query.name}! Welcome to the FIFA server!`)
+// Route 1: GET /author/:type
+const author = async function(req, res) {
+    const name = 'Evam Roberts, Lu Fang, Qi Zhang';
+    if (req.params.type === 'name') {
+      res.send(`Created by ${name}`);
     } else {
-        res.send(`Hello! Welcome to the FIFA server!`)
+      res.status(400).send(`'${req.params.type}' is not a valid author type. Valid types are 'name'.`);
     }
-}
+  }
 
+  // Route 2: GET /random
+  const random = async function(req, res) {
+    const explicit = req.query.explicit === 'true' ? 1 : 0;
+      connection.query(`
+      SELECT C.patent_title, E.patent_id, A.pub_date, A.ai_score_ml, A.ai_score_evo,
+            A.ai_score_nlp, A.ai_score_speach, A.ai_score_vision,
+            A.ai_score_kr, A.ai_score_planning, A.ai_score_hardware
+            FROM Assignee E INNER JOIN AllPatentsWithAICategory A ON E.patent_id = A.doc_id
+            INNER JOIN Content C ON E.patent_id = C.patent_id
+            INNER JOIN Inventors ON E.patent_id = I.patent_id
+            WHERE A.pub_yr >= 2010
+            AND A.pub_yr <= 2020
+            AND explicit <= ${explicit}
+            ORDER BY RAND()
+            LIMIT 1
+    `, (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json({});
+      } else {
+        res.json({ results: results });
+      }
+    });
+  }
 
 // ********************************************
-//               GENERAL ROUTES
+//               BASIC FUNCTIONAL ROUTES
 // ********************************************
 
 
-// Route 3 (handler)
+// Route 3: GET /patents
 async function all_patents(req, res) {
    
     const page = req.query.page
@@ -93,13 +111,9 @@ async function all_patents(req, res) {
     }
 }
 
-async function patent_viz(req, res) {
-
-    // use this league encoding in your query to furnish the correct results
-        // This is the case where page is defined.
-        // The SQL schema has the attribute OverallRating, but modify it to match spec! 
-        // TODO: query and return results here:
-    const patId = req.query.id ? req.query.id : '10000080' 
+// ROUTE 4: GET /patent/:id
+async function patent(req, res) {
+    const patId = req.params.id
     connection.query(`SELECT C.patent_title, I.raw_inventor_name_first, I.raw_inventor_name_last,
         I.inventor_sequence, E.assignee_organization, E.country, A.pub_date,
         C.patent_id, C.patent_abstract, A.ai_score_vision, A.ai_score_speach,
@@ -121,12 +135,12 @@ async function patent_viz(req, res) {
         });
 }
 
-async function map(req, res) {
+// ********************************************
+//               MAP ROUTES
+// ********************************************
 
-    // use this league encoding in your query to furnish the correct results
-    // This is the case where page is defined.
-    // The SQL schema has the attribute OverallRating, but modify it to match spec! 
-    // TODO: query and return results here:
+// ROUTE 5: GET /patent_map
+async function patent_map(req, res) {
     connection.query(`SELECT E.state, COUNT(DISTINCT A.doc_id) AS count
     FROM Assignee E JOIN AllPatentsWithAICategory A
     ON E.patent_id = A.doc_id
@@ -144,11 +158,7 @@ async function map(req, res) {
     });
 }
 
-
-
-// ********************************************
-//             SEARCH ROUTES
-// ********************************************
+// ROUTE 6: GET /patent_map_filter
 async function filter_map(req, res) {
 
     // use this league encoding in your query to furnish the correct results
@@ -193,12 +203,12 @@ async function filter_map(req, res) {
     });
 }
 
+// ********************************************
+//               SEARCH ROUTE
+// ********************************************
 
-// Route 7 (handler)
+// ROUTE 7: GET /search_patents
 async function search_patents(req, res) {
-    // TODO: TASK 8: implement and test, potentially writing your own (ungraded) tests
-    // IMPORTANT: in your SQL LIKE matching, use the %query% format to match the search query to substrings, not just the entire string
-
     const pubFrom = req.query.pubFrom ? req.query.PubFrom : 2010
     const pubTo = req.query.pubTo ? req.query.PubTo : 2020
     const fName = req.query.firstName ? req.query.FirstName : ''
@@ -244,6 +254,7 @@ async function search_patents(req, res) {
             AND A.predict50_planning >= ${planning}
             AND A.predict50_hardware >= ${hardware}
             AND C.patent_title like '%${title}%'
+
             ORDER BY A.pub_date DESC;
             LIMIT ${pagesize} OFFSET ${offset}`, function (error, results) {
 
@@ -264,11 +275,9 @@ async function search_patents(req, res) {
 
 module.exports = {
     hello,
-    jersey,
-    all_matches,
-    all_players,
-    match,
-    player,
-    search_matches,
-    search_players
+    all_patents,
+    patent,
+    patent_map,
+    filter_map,
+    search_patents
 }

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Container, Divider, Link } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
-import LazyTable from '../components/LazyTable';
 import PatentCard from '../components/PatentCard';
 const config = require('../config.json');
 
@@ -21,31 +20,36 @@ export default function HomePage() {
       .then(resText => setAppAuthor(resText));
   }, []);
 
-  const patentColumns = [
-    {
-      field: 'title',
-      headerName: 'Patent Title',
-      renderCell: (row) => <Link onClick={() => setSelectedPatentId(row.patent_id)}>{row.title}</Link>
-    },
-    {
-      field: 'applicants',
-      headerName: 'Applicants',
-    },
-    {
-      field: 'application_date',
-      headerName: 'Application Date'
-    },
-  ];
-
   return (
     <Container>
+      <Box mt={6}>
+        <Typography variant="h3" align="center"> AI Patent Explorer</Typography>
+      </Box>
+      <Box mt={3} display="flex" justifyContent="center">
+        <Button
+          component={NavLink}
+          to="/patents"
+          variant="contained"
+          color="primary"
+        >
+          Explore Patents
+        </Button>
+      </Box>
+      <Box mt={3} display="flex" justifyContent="center">
+        <Button
+          component={NavLink}
+          to="/search_patents"
+          variant="contained"
+          color="primary"
+        >
+          Search Patents
+        </Button>
+      </Box>
+      <Divider />
       {selectedPatentId && <PatentCard patentId={selectedPatentId} handleClose={() => setSelectedPatentId(null)} />}
       <h2>Check out your featured patent:&nbsp;
         <Link onClick={() => setSelectedPatentId(featuredPatent.patent_id)}>{featuredPatent.title}</Link>
       </h2>
-      <Divider />
-      <h2>Top Patents</h2>
-      <LazyTable route={`http://${config.server_host}:${config.server_port}/top_patents`} columns={patentColumns} />
       <Divider />
       <p>{appAuthor}</p>
     </Container>
