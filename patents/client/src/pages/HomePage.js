@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Container, Divider, Link } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-import axios from 'axios';
 
-import LazyTable from '../components/LazyTable';
 import PatentCard from '../components/PatentCard';
 const config = require('../config.json');
 
@@ -11,9 +9,6 @@ export default function HomePage() {
   const [featuredPatent, setFeaturedPatent] = useState({});
   const [appAuthor, setAppAuthor] = useState('');
   const [selectedPatentId, setSelectedPatentId] = useState(null);
-  const [keyword, setKeyword] = useState('');
-  const [patentIndex, setPatentIndex] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     fetch(`http://${config.server_host}:${config.server_port}/random`)
@@ -25,61 +20,31 @@ export default function HomePage() {
       .then(resText => setAppAuthor(resText));
   }, []);
 
-  const handleSearch = async () => {
-    try {
-      const response = await axios.get(`http://${config.server_host}:${config.server_port}/search/patents`, {
-        params: {
-          title: keyword,
-          page: patentIndex || 1
-        }
-      });
-      setSearchResults(response.data.results);
-    } catch (error) {
-      console.error('Error fetching search results:', error);
-    }
-  };
-
-  const patentColumns = [
-    {
-      field: 'title',
-      headerName: 'Patent Title',
-      renderCell: (row) => <Link onClick={() => setSelectedPatentId(row.patent_id)}>{row.title}</Link>
-    },
-    {
-      field: 'applicants',
-      headerName: 'Applicants',
-    },
-    {
-      field: 'application_date',
-      headerName: 'Application Date'
-    },
-  ];
-
   return (
     <Container>
-      <h2>Search Patents</h2>
-      <TextField
-        label="Enter keyword"
-        value={keyword}
-        onChange={(e) => setKeyword(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Enter patent index (optional)"
-        value={patentIndex}
-        onChange={(e) => setPatentIndex(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-      <Button onClick={handleSearch} variant="contained" color="primary">Search</Button>
-      <div className="search-results">
-        {searchResults.map((result) => (
-          <div key={result.patent_id} className="search-result">
-            <Link onClick={() => setSelectedPatentId(result.patent_id)}>{result.patent_title}</Link>
-          </div>
-        ))}
-      </div>
+      <Box mt={6}>
+        <Typography variant="h3" align="center"> AI Patent Explorer</Typography>
+      </Box>
+      <Box mt={3} display="flex" justifyContent="center">
+        <Button
+          component={NavLink}
+          to="/patents"
+          variant="contained"
+          color="primary"
+        >
+          Explore Patents
+        </Button>
+      </Box>
+      <Box mt={3} display="flex" justifyContent="center">
+        <Button
+          component={NavLink}
+          to="/search_patents"
+          variant="contained"
+          color="primary"
+        >
+          Search Patents
+        </Button>
+      </Box>
       <Divider />
       {selectedPatentId && <PatentCard patentId={selectedPatentId} handleClose={() => setSelectedPatentId(null)} />}
       <h2>Check out your featured patent:&nbsp;

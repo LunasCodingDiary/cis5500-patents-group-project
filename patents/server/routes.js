@@ -254,6 +254,7 @@ async function search_patents(req, res) {
             AND A.predict50_planning >= ${planning}
             AND A.predict50_hardware >= ${hardware}
             AND C.patent_title like '%${title}%'
+
             ORDER BY A.pub_date DESC;
             LIMIT ${pagesize} OFFSET ${offset}`, function (error, results) {
 

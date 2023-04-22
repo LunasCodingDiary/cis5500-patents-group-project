@@ -4,13 +4,13 @@ import { Container, Stack,Typography } from '@mui/material';
 
 const config = require('../config.json');
 
-export default function PatentVizPage() {
+export default function PatentPage() {
   const { id } = useParams();
 
   const [patentData, setPatentData] = useState(null);
 
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/patent_viz?id=${id}`)
+    fetch(`http://${config.server_host}:${config.server_port}/patent?id=${id}`)
       .then(res => res.json())
       .then(resJson => setPatentData(resJson));
   }, [id]);
