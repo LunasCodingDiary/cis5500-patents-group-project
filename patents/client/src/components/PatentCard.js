@@ -1,42 +1,36 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Box, Button, Modal } from '@mui/material';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 
 const config = require('../config.json');
 
-export default function PatentCard({ patentId, handleClose }) {
+export default function PatentCard({ patentId, handleClose = () => {}, staticMode }) {
   const [patentData, setPatentData] = useState({});
 
   useEffect(() => {
     fetch(`http://${config.server_host}:${config.server_port}/patent/${patentId}`)
       .then(res => res.json())
-      .then(resJson => setPatentData(resJson))
+      .then(resJson => setPatentData(resJson.results[0]))
   }, [patentId]);
 
-  const chartData = [
+  const chartData = useMemo(() => {
+    return[
     { name: 'Machine Learning', value: patentData.ai_score_ml },
     { name: 'Evolutionary', value: patentData.ai_score_evo },
     { name: 'NLP', value: patentData.ai_score_nlp },
     { name: 'Speech', value: patentData.ai_score_speach },
     { name: 'Vision', value: patentData.ai_score_vision },
-    { name: 'Knowledge Representation', value: patentData.ai_score_kr },
+    { name: 'Knowledge', value: patentData.ai_score_kr },
     { name: 'Planning', value: patentData.ai_score_planning },
     { name: 'Hardware', value: patentData.ai_score_hardware }
   ];
+},[patentData]);
 
-  return (
-    <Modal
-      open={true}
-      onClose={handleClose}
-      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-    >
+  const content =  (
       <Box
         p={3}
         style={{ background: 'white', borderRadius: '16px', border: '2px solid #000', width: 600 }}
       >
-        <h1>{patentData.patent_title}</h1>
-        <h2>Patent id: {patentData.patent_id}</h2>
-
         <div style={{ margin: 20 }}>
           <ResponsiveContainer height={350}>
             <RadarChart data={chartData}>
@@ -51,6 +45,19 @@ export default function PatentCard({ patentId, handleClose }) {
           Close
         </Button>
       </Box>
+  );
+
+  if (staticMode || !patentId) {
+    return content;
+  }
+
+  return (
+    <Modal
+      open={!!patentId}
+      onClose={handleClose}
+      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+    >
+      {content}
     </Modal>
   );
 }

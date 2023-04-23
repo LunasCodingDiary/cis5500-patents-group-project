@@ -36,6 +36,8 @@ export default function PatentsPage() {
           key={patent.patent_id}
           p={3}
           m={2}
+          width={1000}
+          height={300}
           style={{ background: 'white', borderRadius: '16px', border: '2px solid #000' }}
         >
           <h4><NavLink to={`/patent/${patent.patent_id}`}>{patent.patent_title}</NavLink></h4>
@@ -46,7 +48,7 @@ export default function PatentsPage() {
         </Box>
       )}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
-        {selectedPatentId && <PatentCard patentId={selectedPatentId} />}
+        {selectedPatentId && <PatentCard patentId={selectedPatentId} handleClose={handleCloseDialog} staticMode={false}/>}
       </Dialog>
     </Container>
   );
