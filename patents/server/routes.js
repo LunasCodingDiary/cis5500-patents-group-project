@@ -23,25 +23,23 @@ const author = async function(req, res) {
 
   // Route 2: GET /random
 const random = async function(req, res) {
-    const explicit = req.query.explicit === 'true' ? 1 : 0;
       connection.query(`
       SELECT C.patent_title, E.patent_id, A.pub_date, A.ai_score_ml, A.ai_score_evo,
             A.ai_score_nlp, A.ai_score_speach, A.ai_score_vision,
             A.ai_score_kr, A.ai_score_planning, A.ai_score_hardware
             FROM Assignee E INNER JOIN AllPatentsWithAICategory A ON E.patent_id = A.doc_id
             INNER JOIN Content C ON E.patent_id = C.patent_id
-            INNER JOIN Inventors ON E.patent_id = I.patent_id
-            WHERE A.pub_yr >= 2010
+            INNER JOIN Inventors I ON E.patent_id = I.patent_id
+            WHERE A.pub_yr >= 2019
             AND A.pub_yr <= 2020
-            AND explicit <= ${explicit}
             ORDER BY RAND()
-            LIMIT 1
+            LIMIT 1;
     `, (err, data) => {
       if (err || data.length === 0) {
         console.log(err);
         res.json({});
       } else {
-        res.json({ results: data });
+        res.json(data[0]);
       }
     });
   }
@@ -74,11 +72,11 @@ const all_patents = async function (req, res) {
             A.ai_score_kr, A.ai_score_planning, A.ai_score_hardware
             FROM Assignee E INNER JOIN AllPatentsWithAICategory A ON E.patent_id = A.doc_id
             INNER JOIN Content C ON E.patent_id = C.patent_id
-            INNER JOIN Inventors ON E.patent_id = I.patent_id
+            INNER JOIN Inventors I ON E.patent_id = I.patent_id
             WHERE A.pub_yr >= 2010
             AND A.pub_yr <= 2020
-            ORDER BY A.pub_date DESC;
-            LIMIT ${psize} OFFSET ${offset}`, function (error, results, fields) {
+            ORDER BY A.pub_date DESC
+            LIMIT ${psize} OFFSET ${offset};`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
@@ -96,7 +94,7 @@ const all_patents = async function (req, res) {
             A.ai_score_kr, A.ai_score_planning, A.ai_score_hardware
             FROM Assignee E INNER JOIN AllPatentsWithAICategory A ON E.patent_id = A.doc_id
             INNER JOIN Content C ON E.patent_id = C.patent_id
-            INNER JOIN Inventors ON E.patent_id = I.patent_id
+            INNER JOIN Inventors I ON E.patent_id = I.patent_id
             WHERE A.pub_yr >= 2010
             AND A.pub_yr <= 2020
             ORDER BY A.pub_date DESC;`, function (error, results, fields) {
@@ -123,7 +121,7 @@ const patent = async function (req, res) {
         INNER JOIN Content C ON C.patent_id = A.doc_id
         INNER JOIN Assignee E ON A.doc_id = E.patent_id
         INNER JOIN Inventors I ON A.doc_id = I.patent_id
-        WHERE A.doc_id = ${patId};
+        WHERE A.doc_id = '${patId}'
         ORDER BY I.inventor_sequence;`, function (error, results, fields) {
 
             if (error) {
@@ -147,7 +145,7 @@ const patent_map = async function (req, res) {
     WHERE E.country = 'United States' 
     AND E.assignee_organization is not NULL
     GROUP BY E.state
-    ORDER BY count DESC`, function (error, results, fields) {
+    ORDER BY count DESC;`, function (error, results, fields) {
 
         if (error) {
             console.log(error)
@@ -187,7 +185,7 @@ const  filter_map = async function(req, res) {
     AND A.predict50_hardware >= ${hardware}
     AND E.assignee_organization is not NULL
     GROUP BY E.state
-    ORDER BY count DESC`, function (error, results, fields) {
+    ORDER BY count DESC;`, function (error, results, fields) {
 
         if (error) {
             console.log(error)
@@ -204,11 +202,11 @@ const  filter_map = async function(req, res) {
 
 // ROUTE 7: GET /search_patents
 const  search_patents = async function(req, res) {
-    const pubFrom = req.query.pubFrom ? req.query.PubFrom : 2010
-    const pubTo = req.query.pubTo ? req.query.PubTo : 2020
-    const fName = req.query.firstName ? req.query.FirstName : ''
-    const lName = req.query.lastName ? req.query.LastName : ''
-    const org = req.query.org ? req.query.opurg : ''
+    const pubFrom = req.query.pubFrom ? req.query.pubFrom : 2010
+    const pubTo = req.query.pubTo ? req.query.pubTo : 2020
+    const fName = req.query.fName ? req.query.fName : ''
+    const lName = req.query.lName ? req.query.lName : ''
+    const org = req.query.org ? req.query.org : ''
     const ml = req.query.ml ? req.query.ml : 0
     const evo = req.query.evo ? req.query.evo : 0
     const nlp = req.query.nlp ? req.query.nlp : 0
@@ -227,14 +225,13 @@ const  search_patents = async function(req, res) {
         if (page != 1) {
             offset = (page - 1) * 10
         }
-
         //console.log("Entering Query")
         connection.query(`SELECT C.patent_title, E.patent_id, A.pub_date, A.ai_score_ml, A.ai_score_evo,
             A.ai_score_nlp, A.ai_score_speach, A.ai_score_vision,
             A.ai_score_kr, A.ai_score_planning, A.ai_score_hardware
             FROM Assignee E INNER JOIN AllPatentsWithAICategory A ON E.patent_id = A.doc_id
             INNER JOIN Content C ON E.patent_id = C.patent_id
-            INNER JOIN Inventors ON E.patent_id = I.patent_id
+            INNER JOIN Inventors I ON E.patent_id = I.patent_id
             WHERE A.pub_yr >= ${pubFrom}
             AND A.pub_yr <= ${pubTo}
             AND I.raw_inventor_name_first like '${fName}%'
@@ -243,15 +240,15 @@ const  search_patents = async function(req, res) {
             AND A.predict50_ml >= ${ml}
             AND A.predict50_evo >= ${evo}
             AND A.predict50_nlp >= ${nlp}
-            AND A.predict50_speach >= ${speach}
+            AND A.predict50_speech >= ${speach}
             AND A.predict50_vision >= ${vision}
             AND A.predict50_kr >= ${kr}
             AND A.predict50_planning >= ${planning}
             AND A.predict50_hardware >= ${hardware}
             AND C.patent_title like '%${title}%'
 
-            ORDER BY A.pub_date DESC;
-            LIMIT ${pagesize} OFFSET ${offset}`, function (error, results) {
+            ORDER BY A.pub_date DESC
+            LIMIT ${pagesize} OFFSET ${offset};`, function (error, results) {
 
             if (error) {
                 console.log(error)

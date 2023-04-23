@@ -3,6 +3,7 @@ import { Container, Divider, Link, Box, Button, Typography } from '@mui/material
 import { NavLink } from 'react-router-dom';
 
 import PatentCard from '../components/PatentCard';
+import neuralPathwaysImage from '../images/neural-pathways.jpg';
 const config = require('../config.json');
 
 export default function HomePage() {
@@ -22,10 +23,13 @@ export default function HomePage() {
 
   return (
     <Container>
-      <Box mt={6}>
+      <Box mt={12}>
         <Typography variant="h3" align="center"> AI Patent Explorer</Typography>
+        <Box mt={2} maxWidth="200%" display="flex" justifyContent="center">
+          <img src={neuralPathwaysImage} alt="Neural Pathways" style={{ width: '35%', height: 'auto' }} />
+        </Box>
       </Box>
-      <Box mt={3} display="flex" justifyContent="center">
+      <Box mt={4} display="flex" justifyContent="center">
         <Button
           component={NavLink}
           to="/patents"
@@ -35,7 +39,7 @@ export default function HomePage() {
           Explore Patents
         </Button>
       </Box>
-      <Box mt={3} display="flex" justifyContent="center">
+      <Box mt={4} display="flex" justifyContent="center">
         <Button
           component={NavLink}
           to="/search_patents"
@@ -47,11 +51,17 @@ export default function HomePage() {
       </Box>
       <Divider />
       {selectedPatentId && <PatentCard patentId={selectedPatentId} handleClose={() => setSelectedPatentId(null)} />}
-      <h2>Check out your featured patent:&nbsp;
-        <Link onClick={() => setSelectedPatentId(featuredPatent.patent_id)}>{featuredPatent.title}</Link>
-      </h2>
+      <Box mt={2} display="flex" justifyContent="center" alignItems="center">
+      <h3>Featured patent:&nbsp;</h3>
+      <h4>
+       <NavLink to={`/patent/${featuredPatent.patent_id}`}>{featuredPatent.patent_title}</NavLink>
+       <Link onClick={() => setSelectedPatentId(featuredPatent.patent_id)}>   (AI-score chart)  </Link>
+       </h4>
+       </Box>
       <Divider />
-      <p>{appAuthor}</p>
+      <Box display="flex" justifyContent="center" alignItems="center">
+      <h6><p>{appAuthor}</p></h6>
+      </Box>
     </Container>
   );
 };

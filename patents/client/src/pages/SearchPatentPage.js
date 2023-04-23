@@ -7,8 +7,8 @@ const config = require('../config.json');
 export default function SearchPatentPage() {
   const [patents, setPatents] = useState([]);
   const [searchCriteria, setSearchCriteria] = useState({
-    pubFrom: 2010,
-    pubTo: 2020,
+    pubFrom: '2010',
+    pubTo: '2020',
     fName: '',
     lName: '',
     org: '',

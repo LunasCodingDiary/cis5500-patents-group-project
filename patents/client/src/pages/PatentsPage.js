@@ -31,7 +31,7 @@ export default function PatentsPage() {
 
   return (
     <Container sx={flexFormat}>
-      {patents.map((patent) =>
+      {patents?.map((patent) =>
         <Box
           key={patent.patent_id}
           p={3}
