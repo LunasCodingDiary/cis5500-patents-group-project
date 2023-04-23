@@ -53,6 +53,7 @@ export default function SearchPatentPage() {
 
   const handlePageChange = (event, value) => {
     setSearchCriteria({ ...searchCriteria, page: value });
+    setSubmittedCriteria({ ...searchCriteria, page: value });// update results when page changes
   };
 
   const flexFormat = { display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' };
@@ -81,9 +82,6 @@ export default function SearchPatentPage() {
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <TextField fullWidth label="Title" variant="outlined" name="title" value={searchCriteria.title} onChange={handleChange} />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField fullWidth label="Page" variant="outlined" name="page" type="number" value={searchCriteria.page} onChange={handleChange} />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <TextField fullWidth label="Page Size" variant="outlined" name="pagesize" type="number" value={searchCriteria.pagesize} onChange={handleChange} />
@@ -128,7 +126,7 @@ export default function SearchPatentPage() {
       </Container>
       <Box mt={3} display="flex" justifyContent="center">
         <Pagination
-          count={Math.ceil(patents.length / searchCriteria.pagesize)}
+          count= {10}  // we won't be able to knowthe actual length unless we fetch all results intially, then use {Math.ceil(patents.length / searchCriteria.pagesize)}
           page={searchCriteria.page}
           onChange={handlePageChange}
           color="primary"
