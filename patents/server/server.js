@@ -19,7 +19,7 @@ app.get('/search_patents', routes.search_patents);
 app.get('/patent/:id', routes.patent)
 
 app.get('/patent_map', routes.patent_map)
-app.get('/patent_map_filter', routes.filter_map)
+app.get('/patent_map_filter', routes.patent_map_filter)
 
 
 app.listen(config.server_port, () => {
