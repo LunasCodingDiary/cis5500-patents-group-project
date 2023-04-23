@@ -50,7 +50,7 @@ export default function HomePage() {
         </Button>
       </Box>
       <Divider />
-      {selectedPatentId && <PatentCard patentId={selectedPatentId} handleClose={() => setSelectedPatentId(null)} />}
+      {selectedPatentId && <PatentCard patentId={selectedPatentId} handleClose={() => setSelectedPatentId(null)} staticMode={false}/>}
       <Box mt={2} display="flex" justifyContent="center" alignItems="center">
       <h3>Featured patent:&nbsp;</h3>
       <h4>
