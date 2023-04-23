@@ -143,8 +143,7 @@ const patent_map = async function (req, res) {
     ON E.patent_id = A.doc_id
     WHERE E.country = 'United States' 
     AND E.assignee_organization is not NULL
-    GROUP BY E.state
-    ORDER BY count DESC;`, function (error, results, fields) {
+    GROUP BY E.state;`, function (error, results, fields) {
 
         if (error) {
             console.log(error)

@@ -38,6 +38,10 @@ export default function SearchPatentPage() {
     }
   }, [submittedCriteria]);
 
+  if (!patents) {
+    return <div>Loading...</div>;
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
     setSubmittedCriteria({ ...searchCriteria });

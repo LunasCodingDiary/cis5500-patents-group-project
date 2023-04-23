@@ -19,6 +19,10 @@ export default function PatentsPage() {
       .then(resJson => setPatents(resJson.results));
   }, []);
 
+  if (!patents) {
+    return <div>Loading...</div>;
+  }
+
   const handleOpenDialog = (patentId) => {
     setSelectedPatentId(patentId);
     setOpenDialog(true);
