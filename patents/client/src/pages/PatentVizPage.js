@@ -33,7 +33,7 @@ export default function PatentPage() {
         <Typography variant="subtitle1">Country: {patentData[0].country}</Typography>
         <Typography variant="body1" paragraph>{patentData[0].patent_abstract}</Typography>
         <Typography variant="subtitle1">AI Scores:</Typography>
-        <PatentCard patentId={id} />
+        {/* <PatentCard patentId={id} /> */}
         <Typography variant="body1">Vision: {patentData[0].ai_score_vision}</Typography>
         <Typography variant="body1">Speech: {patentData[0].ai_score_speach}</Typography>
         <Typography variant="body1">Machine Learning: {patentData[0].ai_score_ml}</Typography>
