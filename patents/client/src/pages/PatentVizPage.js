@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Stack,Typography } from '@mui/material';
-import PatentCard from './PatentCard';
+import PatentCard from '../components/PatentCard';
 
 const config = require('../config.json');
 

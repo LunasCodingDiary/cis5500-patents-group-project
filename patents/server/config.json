@@ -3,7 +3,7 @@
   "rds_port": "3306",
   "rds_user": "admin",
   "rds_password": "#Patentadmin23",
-  "rds_db": "cis5500-patents",
+  "rds_db": "Patents",
   "server_host": "127.0.0.1",
   "server_port": "8080"
 }
