@@ -25,7 +25,7 @@ export default function NavBar() {
         Search
       </Button>
     </Link>
-    <Link to="/patent_map" style={{ textDecoration: 'none', color: 'inherit', marginRight: '16px' }}>
+    <Link to="/patent_map_filter" style={{ textDecoration: 'none', color: 'inherit', marginRight: '16px' }}>
       <Button variant="contained" color="primary" style={{ textTransform: 'none' }}>
         Map
       </Button>

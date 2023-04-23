@@ -27,7 +27,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/patents" element={<PatentsPage />} />
           <Route path="/patent/:id" element={<PatentVizPage />} />
-          <Route path="/patent_map" element={<PatentMapPage />} />
+          <Route path="/patent_map_filter" element={<PatentMapPage />} />
           <Route path="/search_patents" element={<SearchPatentPage />} />
         </Routes>
       </BrowserRouter>

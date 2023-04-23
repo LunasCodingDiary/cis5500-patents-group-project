@@ -143,7 +143,7 @@ const patent_map = async function (req, res) {
     ON E.patent_id = A.doc_id
     WHERE E.country = 'United States' 
     AND E.assignee_organization is not NULL
-    GROUP BY E.state;`, function (error, results, fields) {
+    GROUP BY state;`, function (error, results, fields) {
 
         if (error) {
             console.log(error)
@@ -155,9 +155,9 @@ const patent_map = async function (req, res) {
 }
 
 // ROUTE 6: GET /patent_map_filter
-const  filter_map = async function(req, res) {
-    const pubFrom = req.query.pubFrom ? req.query.PubFrom : 2010
-    const pubTo = req.query.pubTo ? req.query.PubTo : 2020
+const  patent_map_filter = async function(req, res) {
+    const pubFrom = req.query.pubFrom ? req.query.pubFrom : 2010
+    const pubTo = req.query.pubTo ? req.query.pubTo : 2020
     const ml = req.query.ml ? req.query.ml : 0
     const evo = req.query.evo ? req.query.evo : 0
     const nlp = req.query.nlp ? req.query.nlp : 0
@@ -167,7 +167,7 @@ const  filter_map = async function(req, res) {
     const planning = req.query.planning ? req.query.planning : 0
     const hardware = req.query.hardware ? req.query.hardware : 0
 
-    connection.query(`SELECT E.state, COUNT(DISTINCT A.doc_id) AS count
+    connection.query(`SELECT E.state AS state, COUNT(DISTINCT A.doc_id) AS count
     FROM Assignee E JOIN AllPatentsWithAICategory A
     ON E.patent_id = A.doc_id
     WHERE E.country = 'United States' 
@@ -176,14 +176,13 @@ const  filter_map = async function(req, res) {
     AND A.predict50_ml >= ${ml}
     AND A.predict50_evo >= ${evo}
     AND A.predict50_nlp >= ${nlp}
-    AND A.predict50_speach >= ${speach}
+    AND A.predict50_speech >= ${speach}
     AND A.predict50_vision >= ${vision}
     AND A.predict50_kr >= ${kr}
     AND A.predict50_planning >= ${planning}
     AND A.predict50_hardware >= ${hardware}
     AND E.assignee_organization is not NULL
-    GROUP BY E.state
-    ORDER BY count DESC;`, function (error, results, fields) {
+    GROUP BY state;`, function (error, results, fields) {
 
         if (error) {
             console.log(error)
@@ -268,6 +267,6 @@ module.exports = {
     all_patents,
     patent,
     patent_map,
-    filter_map,
+    patent_map_filter,
     search_patents
 }
