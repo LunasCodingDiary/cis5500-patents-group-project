@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Box, Container, Button, Dialog } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-import PatentCard from './PatentCard';
+import PatentCard from '../components/PatentCard';
 
 const config = require('../config.json');
 
