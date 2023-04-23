@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import { Box, Container, TextField, FormControlLabel, Checkbox, Typography, Button, Grid, Pagination } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
@@ -7,8 +7,8 @@ const config = require('../config.json');
 export default function SearchPatentPage() {
   const [patents, setPatents] = useState([]);
   const [searchCriteria, setSearchCriteria] = useState({
-    pubFrom: '2010',
-    pubTo: '2020',
+    pubFrom: '',
+    pubTo: '',
     fName: '',
     lName: '',
     org: '',
@@ -24,17 +24,27 @@ export default function SearchPatentPage() {
     page: 1,
     pagesize: 10,
   });
+  const [submittedCriteria, setSubmittedCriteria] = useState({ ...searchCriteria });
 
-  const searchPatents = () => {
-    const query = new URLSearchParams(searchCriteria).toString();
-    fetch(`http://${config.server_host}:${config.server_port}/search_patents?${query}`)
-      .then(res => res.json())
-      .then(resJson => setPatents(resJson.results));
-  };
+  useEffect(() => {
+    if (Object.keys(submittedCriteria).length > 0) {
+      const searchPatents = async () => {
+        const query = new URLSearchParams(submittedCriteria).toString();
+        const response = await fetch(`http://${config.server_host}:${config.server_port}/search_patents?${query}`);
+        const resJson = await response.json();
+        setPatents(resJson.results);
+      };
+      searchPatents();
+    }
+  }, [submittedCriteria]);
+
+  if (!patents) {
+    return <div>Loading...</div>;
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    searchPatents();
+    setSubmittedCriteria({ ...searchCriteria });
   };
 
   const handleChange = (event) => {
@@ -47,6 +57,7 @@ export default function SearchPatentPage() {
 
   const handlePageChange = (event, value) => {
     setSearchCriteria({ ...searchCriteria, page: value });
+    setSubmittedCriteria({ ...searchCriteria, page: value });// update results when page changes
   };
 
   const flexFormat = { display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' };
@@ -77,15 +88,12 @@ export default function SearchPatentPage() {
             <TextField fullWidth label="Title" variant="outlined" name="title" value={searchCriteria.title} onChange={handleChange} />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <TextField fullWidth label="Page" variant="outlined" name="page" type="number" value={searchCriteria.page} onChange={handleChange} />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
             <TextField fullWidth label="Page Size" variant="outlined" name="pagesize" type="number" value={searchCriteria.pagesize} onChange={handleChange} />
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h6">AI Categories</Typography>
           </Grid>
-          {['ml', 'evo', 'nlp', 'speach', 'vision', 'kr', 'planning', 'hardware'].map((category) => (
+          {['ml', 'evo', 'nlp', 'speech', 'vision', 'kr', 'planning', 'hardware'].map((category) => (
             <Grid key={category} item xs={6} sm={4} md={3} lg={2}>
               <FormControlLabel
                 control={
@@ -111,7 +119,7 @@ export default function SearchPatentPage() {
             key={patent.patent_id}
             p={3}
             m={2}
-            style={{ background: 'white', borderRadius: '16px', border: '2px solid #000' }}
+            style={{ background: 'white', borderRadius: '16px', border: '2px solid #000' , width: '1000px' }}
           >
             <h4>
               <NavLink to={`/patent/${patent.patent_id}`}>{patent.patent_title}</NavLink>
@@ -122,7 +130,7 @@ export default function SearchPatentPage() {
       </Container>
       <Box mt={3} display="flex" justifyContent="center">
         <Pagination
-          count={Math.ceil(patents.length / searchCriteria.pagesize)}
+          count= {10}  // we won't be able to knowthe actual length unless we fetch all results intially, then use {Math.ceil(patents.length / searchCriteria.pagesize)}
           page={searchCriteria.page}
           onChange={handlePageChange}
           color="primary"

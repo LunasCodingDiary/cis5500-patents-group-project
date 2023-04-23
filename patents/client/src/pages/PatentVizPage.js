@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Stack,Typography } from '@mui/material';
+import { Container, Stack,Typography,Box } from '@mui/material';
 import PatentCard from '../components/PatentCard';
 
 const config = require('../config.json');
@@ -34,8 +34,12 @@ export default function PatentPage() {
         <Typography variant="subtitle1">Assignee: {patentData[0].assignee_organization}</Typography>
         <Typography variant="subtitle1">Country: {patentData[0].country}</Typography>
         <Typography variant="body1" paragraph>{patentData[0].patent_abstract}</Typography>
-       
-        <Typography variant="h5">AI Scores:</Typography>
+        <Box mt={4} display="flex" justifyContent="center">        
+        <Typography variant="h6">AI Scores</Typography>
+        </Box>
+        <Box mt={4} display="flex" justifyContent="center"> 
+        <Stack direction="column" spacing={4}>
+        <PatentCard patentId={id} staticMode={true} />
         <Typography variant="body1">Vision: {patentData[0].ai_score_vision}</Typography>
         <Typography variant="body1">Speech: {patentData[0].ai_score_speach}</Typography>
         <Typography variant="body1">Machine Learning: {patentData[0].ai_score_ml}</Typography>
@@ -44,8 +48,8 @@ export default function PatentPage() {
         <Typography variant="body1">Natural Language Processing: {patentData[0].ai_score_nlp}</Typography>
         <Typography variant="body1">Hardware: {patentData[0].ai_score_hardware}</Typography>
         <Typography variant="body1">Knowledge Representation: {patentData[0].ai_score_kr}</Typography>
-      
-        <PatentCard patentId={id} staticMode={true} />
+        </Stack>
+        </Box>
       </Stack>
       </Stack>
       </Stack>

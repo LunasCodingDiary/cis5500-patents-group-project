@@ -75,7 +75,7 @@ const all_patents = async function (req, res) {
             INNER JOIN Inventors I ON E.patent_id = I.patent_id
             WHERE A.pub_yr >= 2010
             AND A.pub_yr <= 2020
-            ORDER BY A.pub_date DESC
+            GROUP BY A.doc_id
             LIMIT ${psize} OFFSET ${offset};`, function (error, results, fields) {
 
             if (error) {
@@ -87,7 +87,6 @@ const all_patents = async function (req, res) {
         });
 
     } else {
-        // we have implemented this for you to see how to return results by querying the database
         connection.query(`
         SELECT C.patent_title, E.patent_id, A.pub_date, A.ai_score_ml, A.ai_score_evo,
             A.ai_score_nlp, A.ai_score_speach, A.ai_score_vision,
@@ -97,7 +96,7 @@ const all_patents = async function (req, res) {
             INNER JOIN Inventors I ON E.patent_id = I.patent_id
             WHERE A.pub_yr >= 2010
             AND A.pub_yr <= 2020
-            ORDER BY A.pub_date DESC;`, function (error, results, fields) {
+            GROUP BY A.doc_id;`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
@@ -144,8 +143,7 @@ const patent_map = async function (req, res) {
     ON E.patent_id = A.doc_id
     WHERE E.country = 'United States' 
     AND E.assignee_organization is not NULL
-    GROUP BY E.state
-    ORDER BY count DESC;`, function (error, results, fields) {
+    GROUP BY E.state;`, function (error, results, fields) {
 
         if (error) {
             console.log(error)
@@ -246,8 +244,7 @@ const  search_patents = async function(req, res) {
             AND A.predict50_planning >= ${planning}
             AND A.predict50_hardware >= ${hardware}
             AND C.patent_title like '%${title}%'
-
-            ORDER BY A.pub_date DESC
+            GROUP BY A.doc_id
             LIMIT ${pagesize} OFFSET ${offset};`, function (error, results) {
 
             if (error) {

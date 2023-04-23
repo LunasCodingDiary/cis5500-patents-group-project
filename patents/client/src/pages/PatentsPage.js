@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Container, Button, Dialog } from '@mui/material';
+import { Box, Container, Button, Dialog, Pagination } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import PatentCard from '../components/PatentCard';
 
@@ -9,6 +9,7 @@ export default function PatentsPage() {
   const [patents, setPatents] = useState([]);
   const [openDialog, setOpenDialog] = useState(false); // for open the PatentCard
   const [selectedPatentId, setSelectedPatentId] = useState(null);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const pageSize = 10;
@@ -18,6 +19,10 @@ export default function PatentsPage() {
       .then(resJson => setPatents(resJson.results));
   }, []);
 
+  if (!patents) {
+    return <div>Loading...</div>;
+  }
+
   const handleOpenDialog = (patentId) => {
     setSelectedPatentId(patentId);
     setOpenDialog(true);
@@ -25,6 +30,10 @@ export default function PatentsPage() {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
+  };
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
   };
 
   const flexFormat = { display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' };
@@ -50,6 +59,7 @@ export default function PatentsPage() {
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         {selectedPatentId && <PatentCard patentId={selectedPatentId} handleClose={handleCloseDialog} staticMode={false}/>}
       </Dialog>
+      <Pagination count={10} page={page} onChange={handlePageChange} />
     </Container>
   );
 }
