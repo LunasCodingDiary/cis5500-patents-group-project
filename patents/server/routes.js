@@ -22,7 +22,7 @@ const author = async function(req, res) {
   }
 
   // Route 2: GET /random
-  const random = async function(req, res) {
+const random = async function(req, res) {
     const explicit = req.query.explicit === 'true' ? 1 : 0;
       connection.query(`
       SELECT C.patent_title, E.patent_id, A.pub_date, A.ai_score_ml, A.ai_score_evo,
@@ -41,7 +41,7 @@ const author = async function(req, res) {
         console.log(err);
         res.json({});
       } else {
-        res.json({ results: results });
+        res.json({ results: data });
       }
     });
   }
@@ -52,7 +52,7 @@ const author = async function(req, res) {
 
 
 // Route 3: GET /patents
-async function all_patents(req, res) {
+const all_patents = async function (req, res) {
    
     const page = req.query.page
     const psize = req.query.pagesize ? req.query.pagesize : 10
@@ -112,7 +112,7 @@ async function all_patents(req, res) {
 }
 
 // ROUTE 4: GET /patent/:id
-async function patent(req, res) {
+const patent = async function (req, res) {
     const patId = req.params.id
     connection.query(`SELECT C.patent_title, I.raw_inventor_name_first, I.raw_inventor_name_last,
         I.inventor_sequence, E.assignee_organization, E.country, A.pub_date,
@@ -140,7 +140,7 @@ async function patent(req, res) {
 // ********************************************
 
 // ROUTE 5: GET /patent_map
-async function patent_map(req, res) {
+const patent_map = async function (req, res) {
     connection.query(`SELECT E.state, COUNT(DISTINCT A.doc_id) AS count
     FROM Assignee E JOIN AllPatentsWithAICategory A
     ON E.patent_id = A.doc_id
@@ -159,12 +159,7 @@ async function patent_map(req, res) {
 }
 
 // ROUTE 6: GET /patent_map_filter
-async function filter_map(req, res) {
-
-    // use this league encoding in your query to furnish the correct results
-    // This is the case where page is defined.
-    // The SQL schema has the attribute OverallRating, but modify it to match spec!
-    // TODO: query and return results here:
+const  filter_map = async function(req, res) {
     const pubFrom = req.query.pubFrom ? req.query.PubFrom : 2010
     const pubTo = req.query.pubTo ? req.query.PubTo : 2020
     const ml = req.query.ml ? req.query.ml : 0
@@ -208,7 +203,7 @@ async function filter_map(req, res) {
 // ********************************************
 
 // ROUTE 7: GET /search_patents
-async function search_patents(req, res) {
+const  search_patents = async function(req, res) {
     const pubFrom = req.query.pubFrom ? req.query.PubFrom : 2010
     const pubTo = req.query.pubTo ? req.query.PubTo : 2020
     const fName = req.query.firstName ? req.query.FirstName : ''
@@ -274,7 +269,8 @@ async function search_patents(req, res) {
 }
 
 module.exports = {
-    hello,
+    author,
+    random,
     all_patents,
     patent,
     patent_map,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Divider, Link } from '@mui/material';
+import { Container, Divider, Link, Box, Button, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 import PatentCard from '../components/PatentCard';
