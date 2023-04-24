@@ -85,7 +85,7 @@ export default function SearchPatentPage() {
             <TextField fullWidth label="Organization" variant="outlined" name="org" value={searchCriteria.org} onChange={handleChange} />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <TextField fullWidth label="Title" variant="outlined" name="title" value={searchCriteria.title} onChange={handleChange} />
+            <TextField fullWidth label="Keyword" variant="outlined" name="title" value={searchCriteria.title} onChange={handleChange} />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <TextField fullWidth label="Page Size" variant="outlined" name="pagesize" type="number" value={searchCriteria.pagesize} onChange={handleChange} />
@@ -124,6 +124,7 @@ export default function SearchPatentPage() {
             <h4>
               <NavLink to={`/patent/${patent.patent_id}`}>{patent.patent_title}</NavLink>
             </h4>
+            <p>Patent number: {patent.patent_number}</p>
             <p>Publication date: {patent.pub_date}</p>
           </Box>
         ))}

@@ -111,7 +111,7 @@ const all_patents = async function (req, res) {
 // ROUTE 4: GET /patent/:id
 const patent = async function (req, res) {
     const patId = req.params.id
-    connection.query(`SELECT C.patent_title, I.raw_inventor_name_first, I.raw_inventor_name_last,
+    connection.query(`SELECT C.patent_title, CONCAT('US', C.patent_id, C.wipo_kind) AS patent_number, I.raw_inventor_name_first, I.raw_inventor_name_last,
         I.inventor_sequence, E.assignee_organization, E.country, A.pub_date,
         C.patent_id, C.patent_abstract, A.ai_score_vision, A.ai_score_speach,
         A.ai_score_ml, A.ai_score_planning, A.ai_score_evo, A.ai_score_nlp,
@@ -223,7 +223,7 @@ const  search_patents = async function(req, res) {
             offset = (page - 1) * 10
         }
         //console.log("Entering Query")
-        connection.query(`SELECT C.patent_title, E.patent_id, A.pub_date, A.ai_score_ml, A.ai_score_evo,
+        connection.query(`SELECT C.patent_title, CONCAT('US', C.patent_id, C.wipo_kind) AS patent_number, E.patent_id, A.pub_date, A.ai_score_ml, A.ai_score_evo,
             A.ai_score_nlp, A.ai_score_speach, A.ai_score_vision,
             A.ai_score_kr, A.ai_score_planning, A.ai_score_hardware
             FROM Assignee E INNER JOIN AllPatentsWithAICategory A ON E.patent_id = A.doc_id
@@ -232,7 +232,7 @@ const  search_patents = async function(req, res) {
             WHERE A.pub_yr >= ${pubFrom}
             AND A.pub_yr <= ${pubTo}
             AND I.raw_inventor_name_first like '${fName}%'
-            AND I.raw_inventor_name_last like '%${lName}%'
+            AND I.raw_inventor_name_last like '${lName}%'
             AND E.assignee_organization like '%${org}%'
             AND A.predict50_ml >= ${ml}
             AND A.predict50_evo >= ${evo}
@@ -242,7 +242,7 @@ const  search_patents = async function(req, res) {
             AND A.predict50_kr >= ${kr}
             AND A.predict50_planning >= ${planning}
             AND A.predict50_hardware >= ${hardware}
-            AND C.patent_title like '%${title}%'
+            AND ('${title}' = '' OR MATCH(C.patent_title, C.patent_abstract) AGAINST ('${title}' IN BOOLEAN MODE))
             GROUP BY A.doc_id
             LIMIT ${pagesize} OFFSET ${offset};`, function (error, results) {
 

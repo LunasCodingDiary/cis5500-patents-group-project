@@ -28,7 +28,7 @@ export default function PatentPage() {
       <Typography variant="h4">{patentData[0].patent_title}</Typography>
       <Stack direction="row" spacing={4}>
         <Stack direction="column" spacing={2}>
-        <Typography variant="subtitle1">Patent id: {patentData[0].patent_id}</Typography>
+        <Typography variant="subtitle1">Patent number: {patentData[0].patent_number}</Typography>
         <Typography variant="subtitle1">Publication date: {patentData[0].pub_date}</Typography>
         <Typography variant="subtitle1">Inventors: {inventors}</Typography>
         <Typography variant="subtitle1">Assignee: {patentData[0].assignee_organization}</Typography>
