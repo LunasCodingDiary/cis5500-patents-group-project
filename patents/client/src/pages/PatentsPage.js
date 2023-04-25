@@ -53,7 +53,8 @@ export default function PatentsPage() {
           <Button variant="contained" onClick={() => handleOpenDialog(patent.patent_id)}>
             AI Score Chart
           </Button>
-          <p>Patent id: {patent.patent_id}</p>
+          <p>Patent number: {patent.patent_id}</p>
+          <p>Publication date: {patent.pub_date}</p>
         </Box>
       )}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
