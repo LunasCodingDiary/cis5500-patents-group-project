@@ -70,16 +70,16 @@ export default function SearchPatentPage() {
             <Typography variant="h5">Search Patents</Typography>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <TextField fullWidth label="Publication From" variant="outlined" name="pubFrom" type="number" value={searchCriteria.pubFrom} onChange={handleChange} />
+            <TextField fullWidth label="Publication Date From" variant="outlined" name="pubFrom" type="number" helperText="Earliest year is 2010" value={searchCriteria.pubFrom} onChange={handleChange} />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <TextField fullWidth label="Publication To" variant="outlined" name="pubTo" type="number" value={searchCriteria.pubTo} onChange={handleChange} />
+            <TextField fullWidth label="Publication Date To" variant="outlined" name="pubTo" type="number" helperText="Latest year is 2020" value={searchCriteria.pubTo} onChange={handleChange} />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <TextField fullWidth label="First Name" variant="outlined" name="fName" value={searchCriteria.fName} onChange={handleChange} />
+            <TextField fullWidth label="Inventor First Name" variant="outlined" name="fName" value={searchCriteria.fName} onChange={handleChange} />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <TextField fullWidth label="Last Name" variant="outlined" name="lName" value={searchCriteria.lName} onChange={handleChange} />
+            <TextField fullWidth label="Inventor Last Name" variant="outlined" name="lName" value={searchCriteria.lName} onChange={handleChange} />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <TextField fullWidth label="Organization" variant="outlined" name="org" value={searchCriteria.org} onChange={handleChange} />
