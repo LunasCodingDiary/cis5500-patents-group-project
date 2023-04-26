@@ -10,9 +10,6 @@ AI Patent Explorer is a web application that provides an efficient and user-frie
 @emotion/styled: ^11.10.6  
 @mui/material: ^5.11.1  
 @mui/x-data-grid: ^6.2.1  
-@testing-library/jest-dom: ^5.14.1  
-@testing-library/react: ^11.2.7  
-@testing-library/user-event: ^12.8.3  
 antd: ^4.16.13  
 d3-format: ^3.0.1  
 leaflet: ^1.9.3  
@@ -27,12 +24,12 @@ shards-react: ^1.0.3
 web-vitals: ^1.1.2  
 
 ### Server  
+
 cors: ^2.8.5  
 express: ^4.17.1  
 mysql: ^2.18.1  
 node-fetch: ^3.0.0  
 nodemon: ^2.0.12  
-supertest: ^6.1.6  
 jest (devDependency): ^27.1.0  
 
 ## Building the Application
